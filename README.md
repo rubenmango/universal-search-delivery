@@ -2,13 +2,18 @@
 
 Shareable handoff package for **Mermaid Universal Search** (⌘K palette).
 
-This package is the **canonical template** for the personal Cursor skill
-`delivery-documentation` (`~/.cursor/skills/delivery-documentation`). Say
-“delivery documentation” or recall that skill to regenerate packages in this shape.
+This package is the **canonical template** for:
+
+- Cursor skill **`delivery-documentation`** (`~/.cursor/skills/delivery-documentation`)
+- Docs chrome skill **`notion-plain-docs`** (`~/.cursor/skills/notion-plain-docs`)
+
+Say “delivery documentation” or “Notion-plain docs” to regenerate packages in this shape.
+HTML chrome follows **Notion-plain**; product mocks keep Figma (system wins).
 
 | | |
 |---|---|
-| **Taste layer** | [`docs/ruben-taste-layer.mdc`](./docs/ruben-taste-layer.mdc) — applied to delivery chrome |
+| **Notion-plain** | [`docs/notion-plain-docs.mdc`](./docs/notion-plain-docs.mdc) · [template](./docs/notion-plain-template.html) |
+| **Taste layer** | [`docs/ruben-taste-layer.mdc`](./docs/ruben-taste-layer.mdc) |
 | **Figma** | [Universal-search · Search open `4105:10700`](https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&m=dev) |
 | **HTML delivery** | Open [`index.html`](./index.html) (or https://rubenmango.github.io/universal-search-delivery/) |
 | **Product source** | Svelte components under [`src/components/`](./src/components/) |
@@ -20,14 +25,11 @@ This package is the **canonical template** for the personal Cursor skill
 ## Quick start
 
 ```bash
-# Option A — static handoff (designers / PMs / reviewers)
-open delivery/index.html
-
-# Option B — serve locally (shareable on LAN)
-npx --yes serve delivery
+# Static handoff (no build)
+open index.html
 ```
 
-GitHub Pages (after enabling in repo settings → Pages → Deploy from branch `/docs` or `/delivery`): the raw HTML also works from the repo’s **GitHub Pages** URL once enabled.
+Live: https://rubenmango.github.io/universal-search-delivery/
 
 ---
 
@@ -35,13 +37,16 @@ GitHub Pages (after enabling in repo settings → Pages → Deploy from branch `
 
 ```
 universal-search-delivery/
-├── delivery/index.html          ← self-contained delivery slide (share this)
+├── index.html                   ← Notion-plain delivery slide (share this)
 ├── assets/screenshots/          ← Figma captures of key states
-├── assets/icons/                ← search / github / PR glyphs
+├── assets/icons/
 ├── src/components/              ← DashboardSearch, SearchStatusMessage, RepoPrTag
-├── src/search-delivery-page.svelte  ← in-app playground page (SvelteKit)
-├── docs/DECISIONS.md            ← why we chose what we chose
-├── docs/INTEGRATION.md          ← how to wire into Mermaid AI / dashboard
+├── docs/
+│   ├── DECISIONS.md
+│   ├── INTEGRATION.md
+│   ├── notion-plain-docs.mdc
+│   ├── notion-plain-template.html
+│   └── ruben-taste-layer.mdc
 └── README.md
 ```
 

@@ -1,566 +1,427 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Universal Search — Developer delivery</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <!--
-      Taste layer (docs chrome): docs/ruben-taste-layer.mdc
-      Rules applied: Reduce surface area · Eye decides · One primary · Cards ·
-      Never blame the user · Annotate roads not taken · The system wins (Figma panel).
-      Product .palette keeps Figma elevation; page chrome stays flat.
-    -->
-    <style>
-      :root {
-        --storm-25: #fcfcfd;
-        --storm-50: #f2f3f7;
-        --storm-100: #e4e4eb;
-        --storm-400: #8585a4;
-        --storm-600: #57546c;
-        --storm-700: #474454;
-        --storm-800: #474454;
-        --deep-50: #e8eaf9;
-        --deep-800: #1e1a4d;
-        --mermaid-100: #fedfed;
-        --mermaid-600: #b20e45;
-        --anemone-700: #991824;
-        --pink: #e0095f;
-        /* Product panel only — Figma Search open */
-        --panel-shadow: 0 24px 48px -8px rgba(36, 35, 41, 0.28);
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: Inter, system-ui, sans-serif;
-        background: #fff;
-        color: var(--storm-800);
-        line-height: 1.5;
-      }
-      a { color: inherit; }
-      header {
-        position: sticky; top: 0; z-index: 10;
-        display: flex; align-items: center; justify-content: space-between;
-        gap: 16px; flex-wrap: wrap;
-        padding: 16px 24px;
-        background: #fff;
-        border-bottom: 1px solid var(--storm-100);
-      }
-      header h1 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 600;
-        letter-spacing: -0.02em;
-        color: var(--deep-800);
-      }
-      header .eyebrow {
-        margin: 0 0 2px;
-        font-size: 11px;
-        font-weight: 500;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: var(--storm-400);
-      }
-      .actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-      .doc-links { display: flex; gap: 12px; align-items: center; }
-      .doc-links a {
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--storm-400);
-        text-decoration: none;
-        border-bottom: 1px solid transparent;
-      }
-      .doc-links a:hover {
-        color: var(--storm-700);
-        border-bottom-color: var(--storm-100);
-      }
-      .btn.primary {
-        display: inline-flex; align-items: center;
-        height: 32px; padding: 0 12px;
-        border-radius: 6px;
-        border: 1px solid var(--deep-800);
-        background: var(--deep-800);
-        font-size: 12px; font-weight: 500;
-        text-decoration: none; color: #fff;
-      }
-      .btn.primary:hover { border-color: #000; background: #000; }
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Universal Search — Developer delivery</title>
+<!--
+  Docs chrome: Notion-plain (docs/notion-plain-docs.mdc)
+  Judgement:   docs/ruben-taste-layer.mdc
+  Product UI:  Figma Universal-search (system wins)
+-->
+<style>
+  :root{
+    --ink:#37352F; --muted:#787774; --faint:#9B9A97;
+    --line:#E9E9E7; --line-soft:#EDEDEC; --bg:#FFFFFF; --card:#FFFFFF; --tint:#F7F6F3;
+    --pink:#AD1A72; --purple:#5B4FC4;
+    --green:#448361; --green-bg:#EDF3EC;
+    --amber:#9F6B17; --amber-bg:#FBF3DB;
+    --red:#C4554D; --red-bg:#FBE4E2;
+    --gray-bg:#F1F1EF; --radius:6px;
+    /* Product panel only — Figma Search open */
+    --storm-25:#fcfcfd; --storm-50:#f2f3f7; --storm-100:#e4e4eb;
+    --storm-400:#8585a4; --storm-600:#57546c; --storm-700:#474454; --storm-800:#474454;
+    --deep-50:#e8eaf9; --deep-800:#1e1a4d;
+    --mermaid-100:#fedfed; --mermaid-600:#b20e45; --anemone-700:#991824;
+    --panel-shadow:0 24px 48px -8px rgba(36,35,41,.28);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif;
+    font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:740px;margin:0 auto;padding:48px 24px 120px}
+  a{color:var(--ink);text-decoration:underline;text-decoration-color:rgba(55,53,47,.25);text-underline-offset:2px}
+  a:hover{text-decoration-color:var(--ink)}
+  a.action{color:var(--purple);text-decoration-color:rgba(91,79,196,.35)}
+  a.action:hover{text-decoration-color:var(--purple)}
 
-      main {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 24px 24px 64px;
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-      }
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+  .topbar-left{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--faint);font-weight:500;letter-spacing:.02em}
+  .logo{width:18px;height:18px;border-radius:4px;background:var(--ink);display:inline-block;flex-shrink:0}
+  .topbar-links{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:13px}
+  .topbar-links a{color:var(--muted);text-decoration:none;border-bottom:1px solid transparent}
+  .topbar-links a:hover{color:var(--ink);border-bottom-color:var(--line)}
+  .btn-primary{
+    display:inline-flex;align-items:center;height:32px;padding:0 12px;
+    border-radius:var(--radius);background:var(--ink);color:#fff;font-size:13px;font-weight:500;
+    text-decoration:none;border:none;
+  }
+  .btn-primary:hover{background:#000;color:#fff;text-decoration:none}
 
-      .toc-inline {
-        display: flex; flex-wrap: wrap; gap: 8px 16px;
-        padding: 0 0 12px;
-        border-bottom: 1px solid var(--storm-50);
-        font-size: 12px;
-      }
-      .toc-inline a {
-        color: var(--storm-600);
-        text-decoration: none;
-      }
-      .toc-inline a:hover { color: var(--deep-800); }
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+  .tag{font-size:12.5px;font-weight:500;padding:2px 9px;border-radius:4px;background:var(--gray-bg);color:var(--muted)}
+  .tag.holds{background:var(--green-bg);color:var(--green)}
+  .tag.feature{background:#EDE9FE;color:var(--purple)}
+  h1{font-size:36px;line-height:1.2;margin:.1em 0 .3em;letter-spacing:-.01em;font-weight:700}
+  .sub{font-size:16px;color:var(--muted);max-width:64ch;margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:28px;margin-top:26px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:13.5px}
+  .meta b{display:block;color:var(--faint);font-weight:500;font-size:12px;margin-bottom:2px}
 
-      section.card {
-        background: #fff;
-        border: 1px solid var(--storm-100);
-        border-radius: 6px;
-        padding: 16px;
-      }
-      h2 {
-        margin: 0 0 8px;
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--deep-800);
-      }
-      h2 .nid {
-        font-weight: 400;
-        font-size: 12px;
-        color: var(--storm-400);
-      }
-      h3 {
-        margin: 0 0 8px;
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--storm-600);
-      }
-      h3 span { font-weight: 400; color: var(--storm-400); }
-      ul.spec {
-        margin: 0;
-        padding-left: 18px;
-        font-size: 13px;
-        color: var(--storm-600);
-      }
-      ul.spec li { margin: 4px 0; }
-      .pill {
-        display: inline-flex; align-items: center;
-        padding: 2px 9px;
-        border-radius: 4px;
-        border: 1px solid var(--storm-100);
-        background: var(--storm-50);
-        font-size: 11px;
-        font-weight: 500;
-        color: var(--storm-600);
-      }
-      .pill.road {
-        border-color: #e8e0f0;
-        background: #f7f4fb;
-        color: #5c54d4;
-      }
-      .grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
-      @media (min-width: 900px) { .grid.two { grid-template-columns: 1fr 1fr; } }
-      figure { margin: 0; }
-      .shot {
-        display: block; width: 100%; max-width: 511px;
-        border-radius: 6px;
-        border: 1px solid var(--storm-100);
-        background: #fff;
-      }
+  .toc{display:flex;flex-wrap:wrap;gap:8px 16px;margin:28px 0 0;padding:14px 0;border-bottom:1px solid var(--line-soft);font-size:13px}
+  .toc a{color:var(--muted);text-decoration:none}
+  .toc a:hover{color:var(--ink)}
 
-      /* Product panel — Figma fidelity (system wins) */
-      .palette {
-        width: 100%; max-width: 511px;
-        display: flex; flex-direction: column; gap: 16px;
-        padding: 16px; border-radius: 24px;
-        border: 1px solid var(--storm-50); background: #fff;
-        box-shadow: var(--panel-shadow);
-      }
-      .field {
-        display: flex; align-items: center; justify-content: space-between;
-        height: 48px; padding: 0 12px;
-        border-radius: 16px; border: 1px solid var(--storm-100); background: var(--storm-25);
-        font-size: 14px;
-      }
-      .field .ph { color: var(--storm-400); padding: 0 6px; }
-      .field .q { color: var(--storm-800); padding: 0 6px; }
-      .chip {
-        height: 24px; padding: 0 8px; border-radius: 8px;
-        background: var(--storm-50); color: var(--storm-400);
-        font-size: 12px; font-weight: 500; display: inline-flex; align-items: center;
-      }
-      .filters { display: flex; gap: 4px; flex-wrap: wrap; }
-      .filter {
-        height: 28px; padding: 0 12px; border-radius: 7px;
-        font-size: 12px; line-height: 22px; color: var(--storm-400);
-        display: inline-flex; align-items: center;
-      }
-      .filter.active { border: 1px solid var(--storm-100); background: #fff; color: #000; }
-      .sec-title { font-size: 12px; line-height: 22px; color: var(--storm-400); margin: 0; }
-      .list {
-        border: 1px solid var(--storm-50); border-radius: 16px; overflow: hidden;
-        background: var(--storm-25);
-      }
-      .list.plain { background: #fff; }
-      .row {
-        display: flex; align-items: center; justify-content: space-between;
-        height: 48px; padding: 0 12px; font-size: 14px;
-      }
-      .row .meta { display: flex; gap: 8px; align-items: center; font-size: 12px; font-weight: 300; }
-      .row .meta .owner { color: var(--storm-600); text-decoration: underline; }
-      .row .meta .time { color: var(--storm-400); }
-      .row.active-wrap { padding: 0 6px; }
-      .row.active {
-        display: flex; flex: 1; align-items: center; justify-content: space-between;
-        padding: 6px; border-radius: 8px; background: var(--storm-50);
-      }
-      .open-chip {
-        height: 24px; padding: 0 8px; border-radius: 4px; background: #fff;
-        font-size: 12px; font-weight: 500; color: var(--storm-400);
-        display: inline-flex; align-items: center;
-      }
-      .badge {
-        height: 24px; padding: 0 8px; border-radius: 4px;
-        border: 1px solid var(--storm-50); font-size: 12px; font-weight: 500;
-        color: var(--storm-400); display: inline-flex; align-items: center;
-      }
-      .badge.new {
-        border-color: var(--mermaid-600); background: var(--mermaid-100); color: var(--anemone-700);
-      }
-      .icon-box {
-        width: 28px; height: 24px; border-radius: 8px; background: var(--deep-50);
-        display: inline-flex; align-items: center; justify-content: center;
-        font-size: 11px; color: var(--deep-800); margin-right: 2px;
-      }
-      .footer {
-        display: flex; gap: 24px; align-items: center; height: 48px; padding: 0 12px;
-        font-size: 12px; font-weight: 500; color: var(--storm-400);
-      }
-      kbd {
-        display: inline-flex; align-items: center; height: 24px; padding: 0 8px;
-        border-radius: 4px; border: 1px solid var(--storm-50); background: var(--storm-25);
-        font-family: inherit; font-size: 12px; font-weight: 500;
-      }
-      .status {
-        text-align: center; padding: 32px 12px; display: flex; flex-direction: column;
-        gap: 8px; align-items: center;
-      }
-      .status strong { font-size: 14px; font-weight: 500; }
-      .status p { margin: 0; max-width: 320px; font-size: 12px; color: var(--storm-400); }
-      .retry {
-        height: 32px; padding: 0 12px; border-radius: 6px;
-        border: 1px solid var(--storm-100); background: #fff;
-        font-size: 12px; font-weight: 500; color: var(--storm-700);
-        cursor: pointer;
-      }
-      .retry:hover { border-color: var(--storm-400); }
-      .skel {
-        height: 14px; border-radius: 4px; background: var(--storm-50);
-        animation: pulse 1.2s ease-in-out infinite;
-      }
-      @keyframes pulse { 50% { opacity: 0.5; } }
-      .note { font-size: 12px; color: var(--storm-400); margin: 8px 0 0; }
-      code {
-        font-size: 12px;
-        background: var(--storm-50);
-        padding: 1px 5px;
-        border-radius: 4px;
-      }
-      .roads {
-        display: flex; flex-direction: column; gap: 8px;
-        margin: 0; padding: 0; list-style: none;
-      }
-      .roads li {
-        display: flex; gap: 10px; align-items: flex-start;
-        font-size: 13px; color: var(--storm-600);
-      }
-      .roads .pill { flex-shrink: 0; margin-top: 1px; }
-    </style>
-  </head>
-  <body>
-    <header>
+  section{margin-top:44px}
+  .sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
+  .sec-num{font-size:13px;font-weight:600;color:var(--faint)}
+  h2{font-size:23px;margin:0;letter-spacing:-.01em;font-weight:700}
+  .nid{font-size:13px;font-weight:500;color:var(--faint);margin-left:6px}
+  .sec-sub{font-size:14.5px;color:var(--muted);margin:10px 0 18px}
+  .callout{background:var(--tint);border:1px solid var(--line-soft);border-radius:var(--radius);padding:16px 18px;font-size:14.5px;line-height:1.6;margin-top:28px}
+  .callout b{font-weight:600}
+
+  .spec{margin:0;padding-left:18px;font-size:14.5px;color:var(--muted)}
+  .spec li{margin:6px 0}
+  .spec strong{color:var(--ink);font-weight:600}
+  code{font-size:13px;background:var(--tint);padding:1px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+  .pill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:4px;font-size:12.5px;font-weight:500;background:var(--gray-bg);color:var(--muted)}
+  .pill.road{background:#EDE9FE;color:var(--purple)}
+  .pill.kept{background:var(--green-bg);color:var(--green)}
+
+  .grid{display:grid;gap:24px;grid-template-columns:1fr;margin-top:8px}
+  @media (min-width:720px){.grid.two{grid-template-columns:1fr 1fr}}
+  figure{margin:0}
+  figure h3{margin:0 0 8px;font-size:13px;font-weight:500;color:var(--muted)}
+  figure h3 span{color:var(--faint);font-weight:400}
+  .shot{display:block;width:100%;max-width:511px;border-radius:var(--radius);border:1px solid var(--line);background:#fff}
+
+  .roads{display:flex;flex-direction:column;gap:10px;margin:14px 0 0;padding:0;list-style:none}
+  .roads li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--muted)}
+  .roads .pill{flex-shrink:0;margin-top:2px}
+  .roads strong{color:var(--ink)}
+
+  .code-list{margin:14px 0 0;padding-left:18px;font-size:14.5px;color:var(--muted)}
+  .code-list li{margin:6px 0}
+
+  .foot{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+
+  /* —— Product panel (Figma fidelity; system wins) —— */
+  .palette{
+    width:100%;max-width:511px;margin-top:4px;
+    display:flex;flex-direction:column;gap:16px;
+    padding:16px;border-radius:24px;
+    border:1px solid var(--storm-50);background:#fff;
+    box-shadow:var(--panel-shadow);
+    font-size:14px;line-height:1.4;color:var(--storm-800);
+    font-family:Inter,system-ui,sans-serif;
+  }
+  .field{
+    display:flex;align-items:center;justify-content:space-between;
+    height:48px;padding:0 12px;
+    border-radius:16px;border:1px solid var(--storm-100);background:var(--storm-25);
+  }
+  .field .ph{color:var(--storm-400);padding:0 6px}
+  .field .q{color:var(--storm-800);padding:0 6px}
+  .chip{
+    height:24px;padding:0 8px;border-radius:8px;
+    background:var(--storm-50);color:var(--storm-400);
+    font-size:12px;font-weight:500;display:inline-flex;align-items:center;
+  }
+  .filters{display:flex;gap:4px;flex-wrap:wrap}
+  .filter{
+    height:28px;padding:0 12px;border-radius:7px;
+    font-size:12px;line-height:22px;color:var(--storm-400);
+    display:inline-flex;align-items:center;
+  }
+  .filter.active{border:1px solid var(--storm-100);background:#fff;color:#000}
+  .sec-title{font-size:12px;line-height:22px;color:var(--storm-400);margin:0}
+  .list{border:1px solid var(--storm-50);border-radius:16px;overflow:hidden;background:var(--storm-25)}
+  .list.plain{background:#fff}
+  .row{display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 12px;font-size:14px}
+  .row .meta-row{display:flex;gap:8px;align-items:center;font-size:12px;font-weight:300}
+  .row .meta-row .owner{color:var(--storm-600);text-decoration:underline}
+  .row .meta-row .time{color:var(--storm-400)}
+  .row.active-wrap{padding:0 6px}
+  .row.active{
+    display:flex;flex:1;align-items:center;justify-content:space-between;
+    padding:6px;border-radius:8px;background:var(--storm-50);
+  }
+  .open-chip{
+    height:24px;padding:0 8px;border-radius:4px;background:#fff;
+    font-size:12px;font-weight:500;color:var(--storm-400);
+    display:inline-flex;align-items:center;
+  }
+  .badge{
+    height:24px;padding:0 8px;border-radius:4px;
+    border:1px solid var(--storm-50);font-size:12px;font-weight:500;
+    color:var(--storm-400);display:inline-flex;align-items:center;
+  }
+  .badge.new{border-color:var(--mermaid-600);background:var(--mermaid-100);color:var(--anemone-700)}
+  .icon-box{
+    width:28px;height:24px;border-radius:8px;background:var(--deep-50);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:11px;color:var(--deep-800);margin-right:2px;
+  }
+  .palette-footer{
+    display:flex;gap:24px;align-items:center;height:48px;padding:0 12px;
+    font-size:12px;font-weight:500;color:var(--storm-400);
+  }
+  kbd{
+    display:inline-flex;align-items:center;height:24px;padding:0 8px;
+    border-radius:4px;border:1px solid var(--storm-50);background:var(--storm-25);
+    font-family:inherit;font-size:12px;font-weight:500;
+  }
+  .msg{
+    text-align:center;padding:32px 12px;display:flex;flex-direction:column;
+    gap:8px;align-items:center;
+  }
+  .msg strong{font-size:14px;font-weight:500;color:var(--storm-800)}
+  .msg p{margin:0;max-width:320px;font-size:12px;color:var(--storm-400)}
+  .retry{
+    height:32px;padding:0 12px;border-radius:6px;
+    border:1px solid var(--storm-100);background:#fff;
+    font-size:12px;font-weight:500;color:var(--storm-700);cursor:pointer;
+  }
+  .retry:hover{border-color:var(--storm-400)}
+  .skel{height:14px;border-radius:4px;background:var(--storm-50);animation:pulse 1.2s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.5}}
+  .dim{color:var(--storm-400)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="topbar-left"><span class="logo" aria-hidden="true"></span> MERMAID CHART · DESIGN · DELIVERY</div>
+    <div class="topbar-links">
+      <a href="./README.md">README</a>
+      <a href="./docs/DECISIONS.md">Decisions</a>
+      <a href="./docs/INTEGRATION.md">Integration</a>
+      <a class="btn-primary" href="https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&amp;m=dev" target="_blank" rel="noreferrer">Open Figma</a>
+    </div>
+  </div>
+
+  <div class="pill-row">
+    <span class="tag holds">● Ready for eng</span>
+    <span class="tag feature">Universal Search</span>
+    <span class="tag">⌘K palette</span>
+    <span class="tag">Updated 8 Sep 2026</span>
+  </div>
+  <h1>Universal Search</h1>
+  <p class="sub">Designer → developer handoff for the dashboard ⌘K palette: states, spacing, copy, and the roads we did not take.</p>
+  <div class="meta">
+    <div><b>Figma</b><a class="action" href="https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&amp;m=dev" target="_blank" rel="noreferrer">Universal-search · 4105:10700</a></div>
+    <div><b>Surface</b>Dashboard search</div>
+    <div><b>Author</b>Ruben Mangorrinha</div>
+  </div>
+
+  <nav class="toc" aria-label="On this page">
+    <a href="#spec">Spec</a>
+    <a href="#empty">Empty</a>
+    <a href="#results">Results</a>
+    <a href="#messages">States</a>
+    <a href="#shots">Screenshots</a>
+    <a href="#roads">Roads not taken</a>
+    <a href="#code">Code</a>
+  </nav>
+
+  <div class="callout">
+    <b>Chrome vs product.</b> This page uses Notion-plain docs chrome (flat, 6px, no shadow).
+    Live search panels below keep Figma elevation — width <b>511</b>, padding/gap <b>16</b>, radius <b>24</b>, shadow XL. The system wins.
+  </div>
+
+  <section id="spec">
+    <div class="sec-head"><span class="sec-num">00</span><h2>Spacing &amp; structure</h2></div>
+    <p class="sec-sub">Tokens eng should treat as source of truth alongside Figma.</p>
+    <ul class="spec">
+      <li><span class="pill">Docs chrome</span> Notion-plain · 6px radius · 1px border · no shadow</li>
+      <li><span class="pill">Product panel</span> width <strong>511</strong> · padding/gap <strong>16</strong> · radius <strong>24</strong> · shadow XL</li>
+      <li>Search field: height <strong>48</strong> · radius 16 · empty <strong>⌘K</strong> · typed <strong>↵</strong></li>
+      <li>Filters: height 28 · All · Diagrams · Flows · Documents · Person · Teams</li>
+      <li>Result row: height 48 · focused row shows <strong>Open</strong></li>
+      <li>Footer: Navigate ↑↓ · Select ↵ · Close <strong>Esq</strong></li>
+    </ul>
+  </section>
+
+  <section id="empty">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Empty · Recent + Quick actions<span class="nid">2233:35142</span></h2></div>
+    <p class="sec-sub">First thing eng should implement for ⌘K with no query.</p>
+    <div class="palette">
+      <div class="field">
+        <span><span class="ph">What are you looking for</span></span>
+        <span class="chip">⌘K</span>
+      </div>
+      <div class="filters">
+        <span class="filter active">All</span>
+        <span class="filter">Diagrams</span>
+        <span class="filter">Flows</span>
+        <span class="filter">Documents</span>
+        <span class="filter">Person</span>
+        <span class="filter">Teams</span>
+      </div>
       <div>
-        <p class="eyebrow">Developer delivery</p>
-        <h1>Universal Search</h1>
+        <p class="sec-title">Recent</p>
+        <div class="list">
+          <div class="row">
+            <span><strong>Team process</strong> <span class="dim">2026</span></span>
+            <span class="meta-row"><span class="owner">Martin</span><span class="time">Edited 1d</span></span>
+          </div>
+          <div class="row">
+            <span><strong>Team process</strong> <span class="dim">2026</span></span>
+            <span class="meta-row"><span class="owner">Martin</span><span class="time">Edited 1d</span></span>
+          </div>
+          <div class="row">
+            <span><strong>Pull GitHub diagrams</strong></span>
+            <span class="badge">Connection</span>
+          </div>
+        </div>
       </div>
-      <div class="actions">
-        <nav class="doc-links" aria-label="Delivery docs">
-          <a href="./README.md">README</a>
-          <a href="./docs/DECISIONS.md">Decisions</a>
-          <a href="./docs/INTEGRATION.md">Integration</a>
-          <a href="./docs/ruben-taste-layer.mdc">Taste layer</a>
-        </nav>
-        <a
-          class="btn primary"
-          href="https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&m=dev"
-          target="_blank"
-          rel="noreferrer"
-          >Open Figma</a
-        >
+      <div>
+        <p class="sec-title">Quick actions</p>
+        <div class="list plain">
+          <div class="row">
+            <span><span class="icon-box">◈</span> <strong>Create new diagram</strong></span>
+            <span class="badge">Create</span>
+          </div>
+          <div class="row">
+            <span><span class="icon-box">▤</span> <strong>Create</strong> new Flow</span>
+            <span class="badge new">New</span>
+          </div>
+          <div class="row">
+            <span><span class="icon-box">⌥</span> <strong>Pull GitHub diagrams</strong></span>
+            <span class="badge">Connection</span>
+          </div>
+        </div>
       </div>
-    </header>
+      <div class="palette-footer">
+        <span>Navigate <kbd>↑</kbd> <kbd>↓</kbd></span>
+        <span>Select <kbd>↵</kbd></span>
+        <span>Close <kbd>Esq</kbd></span>
+      </div>
+    </div>
+  </section>
 
-    <main>
-      <nav class="toc-inline" aria-label="On this page">
-        <a href="#spec">Spec</a>
-        <a href="#empty">Empty</a>
-        <a href="#results">Results</a>
-        <a href="#messages">States</a>
-        <a href="#shots">Screenshots</a>
-        <a href="#roads">Roads not taken</a>
-        <a href="#code">Code</a>
-      </nav>
-
-      <section class="card" id="spec">
-        <h2>Spacing &amp; structure</h2>
-        <ul class="spec">
-          <li>
-            <span class="pill">Docs chrome</span>
-            6px radius · 1px border · no shadow
-          </li>
-          <li>
-            <span class="pill">Product panel</span>
-            width <strong>511</strong> · padding/gap <strong>16</strong> · radius <strong>24</strong> · shadow XL (Figma)
-          </li>
-          <li>Search field: height <strong>48</strong> · radius 16 · empty <strong>⌘K</strong> · typed <strong>↵</strong></li>
-          <li>Filters: height 28 · All · Diagrams · Flows · Documents · Person · Teams</li>
-          <li>Result row: height 48 · focused row shows <strong>Open</strong></li>
-          <li>Footer: Navigate ↑↓ · Select ↵ · Close <strong>Esq</strong></li>
-        </ul>
-      </section>
-
-      <section id="empty">
-        <h2>Empty · Recent + Quick actions <span class="nid">2233:35142</span></h2>
-        <p class="note">First thing eng should implement for ⌘K with no query.</p>
-        <div class="palette" style="margin-top: 12px">
-          <div class="field">
-            <span><span class="ph">What are you looking for</span></span>
-            <span class="chip">⌘K</span>
+  <section id="results">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Results<span class="nid">4105:10700</span></h2></div>
+    <p class="sec-sub">Typed query · match highlight · focused row Open.</p>
+    <div class="palette">
+      <div class="field">
+        <span><span class="q">Process team</span></span>
+        <span class="chip">↵</span>
+      </div>
+      <div class="filters">
+        <span class="filter active">All</span>
+        <span class="filter">Diagrams</span>
+        <span class="filter">Person</span>
+        <span class="filter">Teams</span>
+      </div>
+      <div>
+        <p class="sec-title">Results</p>
+        <div class="list">
+          <div class="row">
+            <span><strong>Team process</strong> <span class="dim">2026</span></span>
+            <span class="meta-row"><span class="owner">Martin</span><span class="time">Edited 1d</span></span>
           </div>
-          <div class="filters">
-            <span class="filter active">All</span>
-            <span class="filter">Diagrams</span>
-            <span class="filter">Flows</span>
-            <span class="filter">Documents</span>
-            <span class="filter">Person</span>
-            <span class="filter">Teams</span>
+          <div class="row">
+            <span><strong>Process</strong> <span class="dim">David proposal</span></span>
+            <span class="meta-row"><span class="owner">David</span><span class="time">14h</span></span>
           </div>
-          <div>
-            <p class="sec-title">Recent</p>
-            <div class="list">
-              <div class="row">
-                <span><strong>Team process</strong> <span style="color: var(--storm-400)">2026</span></span>
-                <span class="meta"><span class="owner">Martin</span><span class="time">Edited 1d</span></span>
-              </div>
-              <div class="row">
-                <span><strong>Team process</strong> <span style="color: var(--storm-400)">2026</span></span>
-                <span class="meta"><span class="owner">Martin</span><span class="time">Edited 1d</span></span>
-              </div>
-              <div class="row">
-                <span><strong>Pull GitHub diagrams</strong></span>
-                <span class="badge">Connection</span>
-              </div>
-            </div>
-          </div>
-          <div>
-            <p class="sec-title">Quick actions</p>
-            <div class="list plain">
-              <div class="row">
-                <span><span class="icon-box">◈</span> <strong>Create new diagram</strong></span>
-                <span class="badge">Create</span>
-              </div>
-              <div class="row">
-                <span><span class="icon-box">▤</span> <strong>Create</strong> new Flow</span>
-                <span class="badge new">New</span>
-              </div>
-              <div class="row">
-                <span><span class="icon-box">⌥</span> <strong>Pull GitHub diagrams</strong></span>
-                <span class="badge">Connection</span>
-              </div>
-            </div>
-          </div>
-          <div class="footer">
-            <span>Navigate <kbd>↑</kbd> <kbd>↓</kbd></span>
-            <span>Select <kbd>↵</kbd></span>
-            <span>Close <kbd>Esq</kbd></span>
-          </div>
-        </div>
-      </section>
-
-      <section id="results">
-        <h2>Results <span class="nid">4105:10700</span></h2>
-        <div class="palette" style="margin-top: 12px">
-          <div class="field">
-            <span><span class="q">Process team</span></span>
-            <span class="chip">↵</span>
-          </div>
-          <div class="filters">
-            <span class="filter active">All</span>
-            <span class="filter">Diagrams</span>
-            <span class="filter">Person</span>
-            <span class="filter">Teams</span>
-          </div>
-          <div>
-            <p class="sec-title">Results</p>
-            <div class="list">
-              <div class="row">
-                <span><strong>Team process</strong> <span style="color: var(--storm-400)">2026</span></span>
-                <span class="meta"><span class="owner">Martin</span><span class="time">Edited 1d</span></span>
-              </div>
-              <div class="row">
-                <span><strong>Process</strong> <span style="color: var(--storm-400)">David proposal</span></span>
-                <span class="meta"><span class="owner">David</span><span class="time">14h</span></span>
-              </div>
-              <div class="row active-wrap">
-                <div class="row active">
-                  <span
-                    ><strong>Process</strong>
-                    <span style="color: var(--storm-400)">draft website architecture</span></span
-                  >
-                  <span class="open-chip">Open</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="footer">
-            <span>Navigate <kbd>↑</kbd> <kbd>↓</kbd></span>
-            <span>Select <kbd>↵</kbd></span>
-            <span>Close <kbd>Esq</kbd></span>
-          </div>
-        </div>
-      </section>
-
-      <section id="messages">
-        <h2>Message states</h2>
-        <p class="note">
-          Not in Figma — engineered to reuse panel chrome. Copy never blames the reader.
-        </p>
-        <div class="grid two" style="margin-top: 12px">
-          <div class="palette">
-            <div class="field"><span class="q">zzzz not found</span><span class="chip">↵</span></div>
-            <div class="status">
-              <strong>No results for “zzzz not found”</strong>
-              <p>Nothing in this view matched that query.</p>
-            </div>
-          </div>
-          <div class="palette">
-            <div class="field"><span class="q">Process team</span><span class="chip">↵</span></div>
-            <div class="status">
-              <strong>Something went wrong</strong>
-              <p>We couldn’t load search results. Check your connection and try again.</p>
-              <button class="retry" type="button">Try again</button>
-            </div>
-          </div>
-          <div class="palette">
-            <div class="field"><span class="q">Process team</span><span class="chip">↵</span></div>
-            <p class="sec-title">Results</p>
-            <div class="list">
-              <div class="row">
-                <span class="skel" style="width: 160px"></span
-                ><span class="skel" style="width: 72px"></span>
-              </div>
-              <div class="row">
-                <span class="skel" style="width: 140px"></span
-                ><span class="skel" style="width: 64px"></span>
-              </div>
-              <div class="row">
-                <span class="skel" style="width: 180px"></span
-                ><span class="skel" style="width: 80px"></span>
-              </div>
+          <div class="row active-wrap">
+            <div class="row active">
+              <span><strong>Process</strong> <span class="dim">draft website architecture</span></span>
+              <span class="open-chip">Open</span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+      <div class="palette-footer">
+        <span>Navigate <kbd>↑</kbd> <kbd>↓</kbd></span>
+        <span>Select <kbd>↵</kbd></span>
+        <span>Close <kbd>Esq</kbd></span>
+      </div>
+    </div>
+  </section>
 
-      <section id="shots">
-        <h2>Figma screenshots</h2>
-        <div class="grid two" style="margin-top: 12px">
-          <figure>
-            <h3>Results · <span>4105:10700</span></h3>
-            <img
-              class="shot"
-              src="./assets/screenshots/01-results-4105-10700.png"
-              alt="Search results state from Figma"
-            />
-          </figure>
-          <figure>
-            <h3>Empty + Quick actions · <span>2233:35142</span></h3>
-            <img
-              class="shot"
-              src="./assets/screenshots/02-empty-quick-actions-2233-35142.png"
-              alt="Empty Recent and Quick actions from Figma"
-            />
-          </figure>
-          <figure>
-            <h3>Connection + Quick actions · <span>2238:37862</span></h3>
-            <img
-              class="shot"
-              src="./assets/screenshots/04-connection-quick-actions-2238-37862.png"
-              alt="Connection empty search from Figma"
-            />
-          </figure>
-          <figure>
-            <h3>PR drill-in · <span>4034:21258</span></h3>
-            <img
-              class="shot"
-              src="./assets/screenshots/05-pr-drill-in-4034-21258.png"
-              alt="PR linked search drill-in from Figma"
-            />
-          </figure>
-          <figure>
-            <h3>Compact bar · <span>2232:31010</span></h3>
-            <img
-              class="shot"
-              src="./assets/screenshots/03-compact-bar-2232-31010.png"
-              alt="Compact search bar variant"
-            />
-          </figure>
+  <section id="messages">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Message states</h2></div>
+    <p class="sec-sub">Not in Figma — reuse panel chrome. Copy never blames the reader.</p>
+    <div class="grid two">
+      <div class="palette">
+        <div class="field"><span class="q">zzzz not found</span><span class="chip">↵</span></div>
+        <div class="msg">
+          <strong>No results for “zzzz not found”</strong>
+          <p>Nothing in this view matched that query.</p>
         </div>
-      </section>
+      </div>
+      <div class="palette">
+        <div class="field"><span class="q">Process team</span><span class="chip">↵</span></div>
+        <div class="msg">
+          <strong>Something went wrong</strong>
+          <p>We couldn’t load search results. Check your connection and try again.</p>
+          <button class="retry" type="button">Try again</button>
+        </div>
+      </div>
+      <div class="palette">
+        <div class="field"><span class="q">Process team</span><span class="chip">↵</span></div>
+        <p class="sec-title">Results</p>
+        <div class="list">
+          <div class="row"><span class="skel" style="width:160px"></span><span class="skel" style="width:72px"></span></div>
+          <div class="row"><span class="skel" style="width:140px"></span><span class="skel" style="width:64px"></span></div>
+          <div class="row"><span class="skel" style="width:180px"></span><span class="skel" style="width:80px"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <section class="card" id="roads">
-        <h2>Roads not taken</h2>
-        <ul class="roads">
-          <li>
-            <span class="pill road">Skipped</span>
-            Green/purple status PR chip inside ⌘K — competed with results; meta Connection chip instead.
-          </li>
-          <li>
-            <span class="pill road">Skipped</span>
-            Dedicated Figma error/empty components — none shipped; reuse panel chrome + calm copy.
-          </li>
-          <li>
-            <span class="pill road">Skipped</span>
-            Taste-layer pills on product filters — would break Figma fidelity; pills only on docs tags.
-          </li>
-          <li>
-            <span class="pill road">Skipped</span>
-            XL shadow on docs cards/screenshots — stole attention from live palettes.
-          </li>
-          <li>
-            <span class="pill road">Kept</span>
-            Footer label <strong>Esq</strong> — literal Figma; rename only when design updates.
-          </li>
-        </ul>
-      </section>
+  <section id="shots">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Figma screenshots</h2></div>
+    <p class="sec-sub">Flat frames — chrome stays Notion-plain; no XL shadow on shots.</p>
+    <div class="grid two">
+      <figure>
+        <h3>Results · <span>4105:10700</span></h3>
+        <img class="shot" src="./assets/screenshots/01-results-4105-10700.png" alt="Search results state from Figma" />
+      </figure>
+      <figure>
+        <h3>Empty + Quick actions · <span>2233:35142</span></h3>
+        <img class="shot" src="./assets/screenshots/02-empty-quick-actions-2233-35142.png" alt="Empty Recent and Quick actions from Figma" />
+      </figure>
+      <figure>
+        <h3>Connection + Quick actions · <span>2238:37862</span></h3>
+        <img class="shot" src="./assets/screenshots/04-connection-quick-actions-2238-37862.png" alt="Connection empty search from Figma" />
+      </figure>
+      <figure>
+        <h3>PR drill-in · <span>4034:21258</span></h3>
+        <img class="shot" src="./assets/screenshots/05-pr-drill-in-4034-21258.png" alt="PR linked search drill-in from Figma" />
+      </figure>
+      <figure>
+        <h3>Compact bar · <span>2232:31010</span></h3>
+        <img class="shot" src="./assets/screenshots/03-compact-bar-2232-31010.png" alt="Compact search bar variant" />
+      </figure>
+    </div>
+  </section>
 
-      <section class="card" id="code">
-        <h2>Code in this repo</h2>
-        <ul class="spec">
-          <li><code>src/components/DashboardSearch.svelte</code> — interactive palette</li>
-          <li><code>src/components/SearchStatusMessage.svelte</code> — no-results / error / loading</li>
-          <li><code>src/components/RepoPrTag.svelte</code> — status + meta variants</li>
-          <li><code>docs/DECISIONS.md</code> · <code>docs/INTEGRATION.md</code> · <code>docs/ruben-taste-layer.mdc</code></li>
-        </ul>
-        <p class="note">
-          Figma:
-          <a
-            href="https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&m=dev"
-            target="_blank"
-            rel="noreferrer"
-            >Universal-search · 4105:10700</a
-          >
-        </p>
-      </section>
-    </main>
-  </body>
+  <section id="roads">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Roads not taken</h2></div>
+    <p class="sec-sub">Selection logic is part of the deliverable.</p>
+    <ul class="roads">
+      <li><span class="pill road">Skipped</span> Green/purple status PR chip inside ⌘K — competed with results; meta Connection chip instead.</li>
+      <li><span class="pill road">Skipped</span> Dedicated Figma error/empty components — none shipped; reuse panel chrome + calm copy.</li>
+      <li><span class="pill road">Skipped</span> Taste-layer pills on product filters — would break Figma fidelity; pills only on docs tags.</li>
+      <li><span class="pill road">Skipped</span> XL shadow on docs cards/screenshots — stole attention from live palettes.</li>
+      <li><span class="pill kept">Kept</span> Footer label <strong>Esq</strong> — literal Figma; rename only when design updates.</li>
+    </ul>
+  </section>
+
+  <section id="code">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Code in this repo</h2></div>
+    <ul class="code-list">
+      <li><code>src/components/DashboardSearch.svelte</code> — interactive palette</li>
+      <li><code>src/components/SearchStatusMessage.svelte</code> — no-results / error / loading</li>
+      <li><code>src/components/RepoPrTag.svelte</code> — status + meta variants</li>
+      <li><code>docs/DECISIONS.md</code> · <code>docs/INTEGRATION.md</code> · <code>docs/notion-plain-docs.mdc</code> · <code>docs/ruben-taste-layer.mdc</code></li>
+    </ul>
+  </section>
+
+  <div class="foot">
+    <b>Sources.</b>
+    <a href="https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&amp;m=dev" target="_blank" rel="noreferrer">Figma</a>
+    · <a href="https://github.com/rubenmango/universal-search-delivery">Repo</a>
+    · <a href="https://rubenmango.github.io/universal-search-delivery/">Pages</a>
+    · <a href="./docs/notion-plain-docs.mdc">Notion-plain</a>
+    · <a href="./docs/ruben-taste-layer.mdc">Taste layer</a>
+  </div>
+
+</div>
+</body>
 </html>
