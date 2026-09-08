@@ -1,10 +1,24 @@
-# Integration guide
+# Integration guide — Universal Search
 
-How to land Universal Search in the Mermaid AI / dashboard codebase.
+This **public** Pages package is handoff only (slide · screenshots · live palette ·
+password gate). **Product source is private.**
+
+## Where the code lives
+
+| | |
+|---|---|
+| **Private Mermaid repo** | [`Mermaid-Chart/app-team`](https://github.com/Mermaid-Chart/app-team) (org access required) |
+| **Canonical `src/`** | [`handoffs/universal-search/src/`](https://github.com/Mermaid-Chart/app-team/tree/main/handoffs/universal-search/src) |
+| **This package** | Visual delivery only — https://rubenmango.github.io/universal-search-delivery/ |
+
+```bash
+git clone git@github.com:Mermaid-Chart/app-team.git
+cd app-team/handoffs/universal-search
+```
 
 ## Components to copy
 
-From this package → product `src/lib/components/`:
+From the private handoff → product `src/lib/components/`:
 
 | File | Role |
 |---|---|
@@ -65,7 +79,7 @@ type SearchResult = {
   updatedAt?: number;
   pr?: string;
   prStatus?: 'open' | 'merged';
-  entity?: 'person' | 'team'; // Person / Teams filters
+  entity?: 'person' | 'team';
 };
 ```
 
@@ -76,7 +90,7 @@ type SearchResult = {
 - [ ] Typed query: match bold, owner underline → drill-in, focused row shows **Open**
 - [ ] Footer: Navigate / Select / Close (**Esq**)
 - [ ] `#PR` meta chip → PR drill-in
-- [ ] Loading / no-results / error (+ retry) behave as in `delivery/index.html`
+- [ ] Loading / no-results / error (+ retry) behave as in the live slide
 - [ ] Dashboard cards still use status (green/purple) PR chip
 
 ## Figma

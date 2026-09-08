@@ -15,9 +15,9 @@ HTML chrome follows **Notion-plain**; product mocks keep Figma (system wins).
 | **Notion-plain** | [`docs/notion-plain-docs.mdc`](./docs/notion-plain-docs.mdc) · [template](./docs/notion-plain-template.html) |
 | **Taste layer** | [`docs/ruben-taste-layer.mdc`](./docs/ruben-taste-layer.mdc) |
 | **Figma** | [Universal-search · Search open `4105:10700`](https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&m=dev) |
-| **HTML delivery** | Open [`index.html`](./index.html) (or https://rubenmango.github.io/universal-search-delivery/) — includes **Live** interactive palette |
+| **HTML delivery** | Open [`index.html`](./index.html) (or https://rubenmango.github.io/universal-search-delivery/) — password gate · includes **Live** interactive palette |
 | **Live JS** | [`assets/live-search.js`](./assets/live-search.js) — vanilla port of `DashboardSearch` |
-| **Product source** | Svelte components under [`src/components/`](./src/components/) |
+| **Product source** | **Private:** [`Mermaid-Chart/app-team` → `handoffs/universal-search/src`](https://github.com/Mermaid-Chart/app-team/tree/main/handoffs/universal-search/src) |
 | **Decisions** | [`docs/DECISIONS.md`](./docs/DECISIONS.md) |
 | **Integration** | [`docs/INTEGRATION.md`](./docs/INTEGRATION.md) |
 
