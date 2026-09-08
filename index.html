@@ -177,6 +177,76 @@
   .skel{height:14px;border-radius:4px;background:var(--storm-50);animation:pulse 1.2s ease-in-out infinite}
   @keyframes pulse{50%{opacity:.5}}
   .dim{color:var(--storm-400)}
+
+  /* —— Live interactive component —— */
+  .live-stage{
+    margin-top:8px;padding:20px;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--tint);
+  }
+  .seed-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .seed{
+    font:inherit;font-size:12.5px;font-weight:500;padding:4px 10px;border-radius:4px;
+    border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;
+  }
+  .seed:hover{border-color:var(--faint);color:var(--ink)}
+  .seed.is-on{border-color:var(--purple);color:var(--purple);background:#EDE9FE}
+  .live-trigger{
+    display:flex;align-items:center;justify-content:space-between;
+    width:100%;max-width:320px;height:34px;padding:0 4px 0 4px;
+    border:1px solid var(--storm-50);border-radius:8px;background:var(--storm-25);
+    font:inherit;cursor:pointer;color:var(--storm-400);font-size:12px;
+  }
+  .live-trigger:hover{border-color:var(--storm-100)}
+  .live-trigger .left{display:flex;align-items:center;gap:4px}
+  .live-trigger .chip{margin-right:4px}
+  .live-toast{
+    margin-top:12px;font-size:13px;color:var(--muted);
+    min-height:1.4em;
+  }
+  .live-toast:empty,.live-toast[hidden]{display:none}
+
+  #live-overlay{
+    position:fixed;inset:0;z-index:1000;
+    display:flex;align-items:center;justify-content:center;
+    padding:16px;background:rgba(0,0,0,.15);
+  }
+  #live-overlay[hidden]{display:none}
+  #live-panel.palette{margin:0;max-width:min(511px,calc(100vw - 2rem))}
+  #live-panel .block{display:flex;flex-direction:column;gap:8px;width:100%}
+  #live-panel .field{gap:8px}
+  #live-panel .field-left,#live-panel .drill-left{
+    display:flex;align-items:center;min-width:0;flex:1;gap:4px;
+  }
+  #live-panel .live-input{
+    flex:1;min-width:0;border:0;background:transparent;outline:none;
+    font:inherit;font-size:14px;color:var(--storm-800);padding:0 6px;
+  }
+  #live-panel .live-input::placeholder{color:var(--storm-400)}
+  #live-panel .search-ic{display:flex;width:24px;height:24px;align-items:center;justify-content:center;flex-shrink:0}
+  #live-panel .back{
+    border:0;background:transparent;cursor:pointer;color:var(--storm-400);
+    width:28px;height:28px;border-radius:4px;font-size:14px;
+  }
+  #live-panel .back:hover{background:var(--storm-50);color:var(--storm-700)}
+  #live-panel .avatar{
+    width:28px;height:28px;border-radius:999px;background:var(--deep-50);
+    color:var(--deep-800);font-size:11px;font-weight:500;
+    display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  #live-panel .filter{cursor:pointer;border:0;background:transparent;font:inherit}
+  #live-panel .filter.active{border:1px solid var(--storm-100);background:#fff;color:#000}
+  #live-panel .row{
+    width:100%;border:0;background:transparent;cursor:pointer;text-align:left;
+    font:inherit;color:inherit;
+  }
+  #live-panel .row.is-active,#live-panel .row:hover{background:var(--storm-50)}
+  #live-panel .owner,#live-panel .meta-pr{
+    border:0;background:transparent;cursor:pointer;font:inherit;padding:0;
+    color:var(--storm-600);text-decoration:underline;font-size:12px;font-weight:300;
+  }
+  #live-panel .meta-pr{text-decoration:none;border:1px solid var(--storm-50);border-radius:4px;padding:0 8px;height:24px;display:inline-flex;align-items:center;color:var(--storm-400);font-weight:500}
+  #live-panel .icon-box.gh{background:transparent;width:20px;height:20px;margin:0 4px}
+  #live-panel .field.drill{border:0;background:rgba(255,255,255,.95);padding:0 4px}
 </style>
 </head>
 <body>
@@ -207,6 +277,7 @@
   </div>
 
   <nav class="toc" aria-label="On this page">
+    <a href="#live">Live</a>
     <a href="#spec">Spec</a>
     <a href="#empty">Empty</a>
     <a href="#results">Results</a>
@@ -221,8 +292,31 @@
     Live search panels below keep Figma elevation — width <b>511</b>, padding/gap <b>16</b>, radius <b>24</b>, shadow XL. The system wins.
   </div>
 
+  <section id="live">
+    <div class="sec-head"><span class="sec-num">00</span><h2>Live component</h2></div>
+    <p class="sec-sub">Working HTML port of <code>DashboardSearch</code> — type, filter, ↑↓↵, owner / PR drill-in. No build. Press <kbd>⌘K</kbd> anywhere on this page.</p>
+    <div class="live-stage">
+      <div class="seed-row" role="group" aria-label="Seed a state">
+        <button type="button" class="seed is-on" data-seed="empty">Empty</button>
+        <button type="button" class="seed" data-seed="results">Results</button>
+        <button type="button" class="seed" data-seed="no-results">No results</button>
+        <button type="button" class="seed" data-seed="loading">Loading</button>
+        <button type="button" class="seed" data-seed="error">Error</button>
+        <button type="button" class="seed" data-seed="team">Team explore</button>
+      </div>
+      <button type="button" class="live-trigger" id="live-trigger" aria-label="Search anything">
+        <span class="left">
+          <img src="./assets/icons/search.svg" alt="" width="16" height="16" />
+          <span>Search anything</span>
+        </span>
+        <span class="chip">⌘K</span>
+      </button>
+      <p class="live-toast" id="live-toast" hidden></p>
+    </div>
+  </section>
+
   <section id="spec">
-    <div class="sec-head"><span class="sec-num">00</span><h2>Spacing &amp; structure</h2></div>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Spacing &amp; structure</h2></div>
     <p class="sec-sub">Tokens eng should treat as source of truth alongside Figma.</p>
     <ul class="spec">
       <li><span class="pill">Docs chrome</span> Notion-plain · 6px radius · 1px border · no shadow</li>
@@ -235,7 +329,7 @@
   </section>
 
   <section id="empty">
-    <div class="sec-head"><span class="sec-num">01</span><h2>Empty · Recent + Quick actions<span class="nid">2233:35142</span></h2></div>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Empty · Recent + Quick actions<span class="nid">2233:35142</span></h2></div>
     <p class="sec-sub">First thing eng should implement for ⌘K with no query.</p>
     <div class="palette">
       <div class="field">
@@ -293,7 +387,7 @@
   </section>
 
   <section id="results">
-    <div class="sec-head"><span class="sec-num">02</span><h2>Results<span class="nid">4105:10700</span></h2></div>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Results<span class="nid">4105:10700</span></h2></div>
     <p class="sec-sub">Typed query · match highlight · focused row Open.</p>
     <div class="palette">
       <div class="field">
@@ -334,7 +428,7 @@
   </section>
 
   <section id="messages">
-    <div class="sec-head"><span class="sec-num">03</span><h2>Message states</h2></div>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Message states</h2></div>
     <p class="sec-sub">Not in Figma — reuse panel chrome. Copy never blames the reader.</p>
     <div class="grid two">
       <div class="palette">
@@ -365,7 +459,7 @@
   </section>
 
   <section id="shots">
-    <div class="sec-head"><span class="sec-num">04</span><h2>Figma screenshots</h2></div>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Figma screenshots</h2></div>
     <p class="sec-sub">Flat frames — chrome stays Notion-plain; no XL shadow on shots.</p>
     <div class="grid two">
       <figure>
@@ -392,7 +486,7 @@
   </section>
 
   <section id="roads">
-    <div class="sec-head"><span class="sec-num">05</span><h2>Roads not taken</h2></div>
+    <div class="sec-head"><span class="sec-num">06</span><h2>Roads not taken</h2></div>
     <p class="sec-sub">Selection logic is part of the deliverable.</p>
     <ul class="roads">
       <li><span class="pill road">Skipped</span> Green/purple status PR chip inside ⌘K — competed with results; meta Connection chip instead.</li>
@@ -404,9 +498,10 @@
   </section>
 
   <section id="code">
-    <div class="sec-head"><span class="sec-num">06</span><h2>Code in this repo</h2></div>
+    <div class="sec-head"><span class="sec-num">07</span><h2>Code in this repo</h2></div>
     <ul class="code-list">
-      <li><code>src/components/DashboardSearch.svelte</code> — interactive palette</li>
+      <li><code>assets/live-search.js</code> — HTML live component (this page · section 00)</li>
+      <li><code>src/components/DashboardSearch.svelte</code> — product Svelte palette</li>
       <li><code>src/components/SearchStatusMessage.svelte</code> — no-results / error / loading</li>
       <li><code>src/components/RepoPrTag.svelte</code> — status + meta variants</li>
       <li><code>docs/DECISIONS.md</code> · <code>docs/INTEGRATION.md</code> · <code>docs/notion-plain-docs.mdc</code> · <code>docs/ruben-taste-layer.mdc</code></li>
@@ -423,5 +518,10 @@
   </div>
 
 </div>
+
+<div id="live-overlay" hidden>
+  <div id="live-panel" class="palette" role="dialog" aria-modal="true" aria-label="Universal Search"></div>
+</div>
+<script src="./assets/live-search.js"></script>
 </body>
 </html>

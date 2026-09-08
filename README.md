@@ -15,7 +15,8 @@ HTML chrome follows **Notion-plain**; product mocks keep Figma (system wins).
 | **Notion-plain** | [`docs/notion-plain-docs.mdc`](./docs/notion-plain-docs.mdc) · [template](./docs/notion-plain-template.html) |
 | **Taste layer** | [`docs/ruben-taste-layer.mdc`](./docs/ruben-taste-layer.mdc) |
 | **Figma** | [Universal-search · Search open `4105:10700`](https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&m=dev) |
-| **HTML delivery** | Open [`index.html`](./index.html) (or https://rubenmango.github.io/universal-search-delivery/) |
+| **HTML delivery** | Open [`index.html`](./index.html) (or https://rubenmango.github.io/universal-search-delivery/) — includes **Live** interactive palette |
+| **Live JS** | [`assets/live-search.js`](./assets/live-search.js) — vanilla port of `DashboardSearch` |
 | **Product source** | Svelte components under [`src/components/`](./src/components/) |
 | **Decisions** | [`docs/DECISIONS.md`](./docs/DECISIONS.md) |
 | **Integration** | [`docs/INTEGRATION.md`](./docs/INTEGRATION.md) |
@@ -37,7 +38,8 @@ Live: https://rubenmango.github.io/universal-search-delivery/
 
 ```
 universal-search-delivery/
-├── index.html                   ← Notion-plain delivery slide (share this)
+├── index.html                   ← Notion-plain delivery slide + live component
+├── assets/live-search.js        ← interactive HTML port of DashboardSearch
 ├── assets/screenshots/          ← Figma captures of key states
 ├── assets/icons/
 ├── src/components/              ← DashboardSearch, SearchStatusMessage, RepoPrTag
