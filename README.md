@@ -4,8 +4,9 @@ Shareable handoff package for **Mermaid Universal Search** (⌘K palette).
 
 | | |
 |---|---|
+| **Taste layer** | [`docs/ruben-taste-layer.mdc`](./docs/ruben-taste-layer.mdc) — applied to delivery chrome |
 | **Figma** | [Universal-search · Search open `4105:10700`](https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&m=dev) |
-| **HTML delivery** | Open [`delivery/index.html`](./delivery/index.html) in a browser (no build) |
+| **HTML delivery** | Open [`index.html`](./index.html) (or https://rubenmango.github.io/universal-search-delivery/) |
 | **Product source** | Svelte components under [`src/components/`](./src/components/) |
 | **Decisions** | [`docs/DECISIONS.md`](./docs/DECISIONS.md) |
 | **Integration** | [`docs/INTEGRATION.md`](./docs/INTEGRATION.md) |

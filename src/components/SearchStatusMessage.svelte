@@ -51,7 +51,7 @@
       No results{#if query.trim()} for “{query.trim()}”{/if}
     </p>
     <p class="max-w-[320px] text-[12px] leading-[18px] tracking-[-0.132px] text-storm-grey-400">
-      Try another name, owner, or switch filters.
+      Nothing in this view matched that query.
     </p>
   </div>
 {:else}
