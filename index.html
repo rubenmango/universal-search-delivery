@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Universal Search — Developer delivery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --storm-25: #fcfcfd;
+        --storm-50: #f2f3f7;
+        --storm-100: #e4e4eb;
+        --storm-400: #8585a4;
+        --storm-600: #57546c;
+        --storm-700: #474454;
+        --storm-800: #474454;
+        --deep-50: #e8eaf9;
+        --deep-800: #1e1a4d;
+        --mermaid-100: #fedfed;
+        --mermaid-600: #b20e45;
+        --anemone-700: #991824;
+        --shadow-xl: 0 24px 48px -8px rgba(36, 35, 41, 0.28);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        background: var(--storm-25);
+        color: var(--storm-800);
+        line-height: 1.45;
+      }
+      a { color: inherit; }
+      header {
+        position: sticky; top: 0; z-index: 10;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 16px; flex-wrap: wrap;
+        padding: 16px 24px;
+        background: #fff;
+        border-bottom: 1px solid var(--storm-50);
+      }
+      header h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.2px; color: var(--deep-800); }
+      header .eyebrow { margin: 0 0 4px; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; color: var(--storm-400); }
+      .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      .btn {
+        display: inline-flex; align-items: center;
+        height: 32px; padding: 0 12px;
+        border-radius: 8px; border: 1px solid var(--storm-100);
+        background: #fff; font-size: 12px; font-weight: 500; text-decoration: none;
+        color: var(--storm-600);
+      }
+      .btn.primary { background: var(--deep-800); border-color: var(--deep-800); color: #fff; }
+      main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; display: flex; flex-direction: column; gap: 40px; }
+      section.card {
+        background: #fff; border: 1px solid var(--storm-50); border-radius: 16px; padding: 24px;
+      }
+      h2 { margin: 0 0 12px; font-size: 16px; font-weight: 600; color: var(--deep-800); }
+      h3 { margin: 0 0 8px; font-size: 13px; font-weight: 500; color: var(--storm-600); }
+      h3 span { font-weight: 400; color: var(--storm-400); }
+      ul.spec { margin: 0; padding-left: 18px; font-size: 13px; color: var(--storm-600); }
+      ul.spec li { margin: 4px 0; }
+      .grid { display: grid; gap: 32px; grid-template-columns: 1fr; }
+      @media (min-width: 960px) { .grid.two { grid-template-columns: 1fr 1fr; } }
+      .shot {
+        display: block; width: 100%; max-width: 511px;
+        border-radius: 16px; border: 1px solid var(--storm-50);
+        box-shadow: var(--shadow-xl); background: #fff;
+      }
+      .palette {
+        width: 100%; max-width: 511px;
+        display: flex; flex-direction: column; gap: 16px;
+        padding: 16px; border-radius: 24px;
+        border: 1px solid var(--storm-50); background: #fff;
+        box-shadow: var(--shadow-xl);
+      }
+      .field {
+        display: flex; align-items: center; justify-content: space-between;
+        height: 48px; padding: 0 12px;
+        border-radius: 16px; border: 1px solid var(--storm-100); background: var(--storm-25);
+        font-size: 14px;
+      }
+      .field .ph { color: var(--storm-400); padding: 0 6px; }
+      .field .q { color: var(--storm-800); padding: 0 6px; }
+      .chip {
+        height: 24px; padding: 0 8px; border-radius: 8px;
+        background: var(--storm-50); color: var(--storm-400);
+        font-size: 12px; font-weight: 500; display: inline-flex; align-items: center;
+      }
+      .filters { display: flex; gap: 4px; flex-wrap: wrap; }
+      .filter {
+        height: 28px; padding: 0 12px; border-radius: 7px;
+        font-size: 12px; line-height: 22px; color: var(--storm-400);
+        display: inline-flex; align-items: center;
+      }
+      .filter.active { border: 1px solid var(--storm-100); background: #fff; color: #000; }
+      .sec-title { font-size: 12px; line-height: 22px; color: var(--storm-400); margin: 0; }
+      .list {
+        border: 1px solid var(--storm-50); border-radius: 16px; overflow: hidden;
+        background: var(--storm-25);
+      }
+      .list.plain { background: #fff; }
+      .row {
+        display: flex; align-items: center; justify-content: space-between;
+        height: 48px; padding: 0 12px; font-size: 14px;
+      }
+      .row .meta { display: flex; gap: 8px; align-items: center; font-size: 12px; font-weight: 300; }
+      .row .meta .owner { color: var(--storm-600); text-decoration: underline; }
+      .row .meta .time { color: var(--storm-400); }
+      .row.active-wrap { padding: 0 6px; }
+      .row.active {
+        display: flex; flex: 1; align-items: center; justify-content: space-between;
+        padding: 6px; border-radius: 8px; background: var(--storm-50);
+      }
+      .open-chip {
+        height: 24px; padding: 0 8px; border-radius: 4px; background: #fff;
+        font-size: 12px; font-weight: 500; color: var(--storm-400);
+        display: inline-flex; align-items: center;
+      }
+      .badge {
+        height: 24px; padding: 0 8px; border-radius: 4px;
+        border: 1px solid var(--storm-50); font-size: 12px; font-weight: 500;
+        color: var(--storm-400); display: inline-flex; align-items: center;
+      }
+      .badge.new {
+        border-color: var(--mermaid-600); background: var(--mermaid-100); color: var(--anemone-700);
+      }
+      .icon-box {
+        width: 28px; height: 24px; border-radius: 8px; background: var(--deep-50);
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 11px; color: var(--deep-800); margin-right: 2px;
+      }
+      .footer {
+        display: flex; gap: 24px; align-items: center; height: 48px; padding: 0 12px;
+        font-size: 12px; font-weight: 500; color: var(--storm-400);
+      }
+      kbd {
+        display: inline-flex; align-items: center; height: 24px; padding: 0 8px;
+        border-radius: 4px; border: 1px solid var(--storm-50); background: var(--storm-25);
+        font-family: inherit; font-size: 12px; font-weight: 500;
+      }
+      .status {
+        text-align: center; padding: 32px 12px; display: flex; flex-direction: column;
+        gap: 8px; align-items: center;
+      }
+      .status strong { font-size: 14px; font-weight: 500; }
+      .status p { margin: 0; max-width: 320px; font-size: 12px; color: var(--storm-400); }
+      .retry {
+        height: 32px; padding: 0 12px; border-radius: 8px;
+        border: 1px solid var(--storm-100); background: #fff;
+        font-size: 12px; font-weight: 500; color: var(--storm-700);
+      }
+      .skel { height: 14px; border-radius: 4px; background: var(--storm-50); animation: pulse 1.2s ease-in-out infinite; }
+      @keyframes pulse { 50% { opacity: 0.5; } }
+      .toc a { font-size: 13px; color: var(--storm-600); }
+      code { font-size: 12px; background: var(--storm-50); padding: 1px 5px; border-radius: 4px; }
+      .note { font-size: 12px; color: var(--storm-400); margin-top: 12px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <p class="eyebrow">Developer delivery</p>
+        <h1>Universal Search</h1>
+      </div>
+      <div class="actions">
+        <a class="btn" href="./README.md">README</a>
+        <a class="btn" href="./docs/DECISIONS.md">Decisions</a>
+        <a class="btn" href="./docs/INTEGRATION.md">Integration</a>
+        <a
+          class="btn primary"
+          href="https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&m=dev"
+          target="_blank"
+          rel="noreferrer"
+          >Open Figma</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Contents</h2>
+        <ol class="toc">
+          <li><a href="#spec">Spacing &amp; structure</a></li>
+          <li><a href="#empty">Empty · Recent + Quick actions</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#messages">No results · Loading · Error</a></li>
+          <li><a href="#shots">Figma screenshots</a></li>
+          <li><a href="#code">Code in this repo</a></li>
+        </ol>
+        <p class="note">
+          Share this HTML (or the GitHub repo link). No build step — open the file locally or via
+          <code>npx serve delivery</code>.
+        </p>
+      </section>
+
+      <section class="card" id="spec">
+        <h2>Spacing &amp; structure</h2>
+        <ul class="spec">
+          <li>Panel: width <strong>511</strong> · padding <strong>16</strong> · gap <strong>16</strong> · radius <strong>24</strong> · shadow XL</li>
+          <li>Search field: height <strong>48</strong> · radius <strong>16</strong> · px 12 · border storm-100</li>
+          <li>Filters: height <strong>28</strong> · gap 4 · All · Diagrams · Flows · Documents · Person · Teams</li>
+          <li>Result row: height <strong>48</strong> · active inset + <strong>Open</strong> chip</li>
+          <li>Footer: Navigate ↑↓ · Select ↵ · Close <strong>Esq</strong> (Figma spelling)</li>
+          <li>Empty affordance <strong>⌘K</strong> · typed query shows <strong>↵</strong></li>
+        </ul>
+      </section>
+
+      <section id="empty">
+        <h2>Empty · Recent + Quick actions <span style="font-weight:400;color:var(--storm-400);font-size:13px">2233:35142</span></h2>
+        <div class="palette" style="margin-top:12px">
+          <div class="field">
+            <span><span class="ph">What are you looking for</span></span>
+            <span class="chip">⌘K</span>
+          </div>
+          <div class="filters">
+            <span class="filter active">All</span>
+            <span class="filter">Diagrams</span>
+            <span class="filter">Flows</span>
+            <span class="filter">Documents</span>
+            <span class="filter">Person</span>
+            <span class="filter">Teams</span>
+          </div>
+          <div>
+            <p class="sec-title">Recent</p>
+            <div class="list">
+              <div class="row">
+                <span><strong>Team process</strong> <span style="color:var(--storm-400)">2026</span></span>
+                <span class="meta"><span class="owner">Martin</span><span class="time">Edited 1d</span></span>
+              </div>
+              <div class="row">
+                <span><strong>Team process</strong> <span style="color:var(--storm-400)">2026</span></span>
+                <span class="meta"><span class="owner">Martin</span><span class="time">Edited 1d</span></span>
+              </div>
+              <div class="row">
+                <span><strong>Pull GitHub diagrams</strong></span>
+                <span class="badge">Connection</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="sec-title">Quick actions</p>
+            <div class="list plain">
+              <div class="row">
+                <span><span class="icon-box">◈</span> <strong>Create new diagram</strong></span>
+                <span class="badge">Create</span>
+              </div>
+              <div class="row">
+                <span><span class="icon-box">▤</span> <strong>Create</strong> new Flow</span>
+                <span class="badge new">New</span>
+              </div>
+              <div class="row">
+                <span><span class="icon-box">⌥</span> <strong>Pull GitHub diagrams</strong></span>
+                <span class="badge">Connection</span>
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <span>Navigate <kbd>↑</kbd> <kbd>↓</kbd></span>
+            <span>Select <kbd>↵</kbd></span>
+            <span>Close <kbd>Esq</kbd></span>
+          </div>
+        </div>
+      </section>
+
+      <section id="results">
+        <h2>Results <span style="font-weight:400;color:var(--storm-400);font-size:13px">4105:10700</span></h2>
+        <div class="palette" style="margin-top:12px">
+          <div class="field">
+            <span><span class="q">Process team</span></span>
+            <span class="chip">↵</span>
+          </div>
+          <div class="filters">
+            <span class="filter active">All</span>
+            <span class="filter">Diagrams</span>
+            <span class="filter">Person</span>
+            <span class="filter">Teams</span>
+          </div>
+          <div>
+            <p class="sec-title">Results</p>
+            <div class="list">
+              <div class="row">
+                <span><strong>Team process</strong> <span style="color:var(--storm-400)">2026</span></span>
+                <span class="meta"><span class="owner">Martin</span><span class="time">Edited 1d</span></span>
+              </div>
+              <div class="row">
+                <span><strong>Process</strong> <span style="color:var(--storm-400)">David proposal</span></span>
+                <span class="meta"><span class="owner">David</span><span class="time">14h</span></span>
+              </div>
+              <div class="row active-wrap">
+                <div class="row active">
+                  <span><strong>Process</strong> <span style="color:var(--storm-400)">draft website architecture</span></span>
+                  <span class="open-chip">Open</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <span>Navigate <kbd>↑</kbd> <kbd>↓</kbd></span>
+            <span>Select <kbd>↵</kbd></span>
+            <span>Close <kbd>Esq</kbd></span>
+          </div>
+        </div>
+      </section>
+
+      <section id="messages">
+        <h2>Message states</h2>
+        <p class="note" style="margin-bottom:16px">Not in Figma component set — engineered to match panel chrome.</p>
+        <div class="grid two">
+          <div class="palette">
+            <div class="field"><span class="q">zzzz not found</span><span class="chip">↵</span></div>
+            <div class="status">
+              <strong>No results for “zzzz not found”</strong>
+              <p>Try another name, owner, or switch filters.</p>
+            </div>
+          </div>
+          <div class="palette">
+            <div class="field"><span class="q">Process team</span><span class="chip">↵</span></div>
+            <div class="status">
+              <strong>Something went wrong</strong>
+              <p>We couldn’t load search results. Check your connection and try again.</p>
+              <button class="retry" type="button">Try again</button>
+            </div>
+          </div>
+          <div class="palette">
+            <div class="field"><span class="q">Process team</span><span class="chip">↵</span></div>
+            <p class="sec-title">Results</p>
+            <div class="list">
+              <div class="row"><span class="skel" style="width:160px"></span><span class="skel" style="width:72px"></span></div>
+              <div class="row"><span class="skel" style="width:140px"></span><span class="skel" style="width:64px"></span></div>
+              <div class="row"><span class="skel" style="width:180px"></span><span class="skel" style="width:80px"></span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="shots">
+        <h2>Figma screenshots</h2>
+        <div class="grid two" style="margin-top:12px">
+          <figure>
+            <h3>Results · <span>4105:10700</span></h3>
+            <img class="shot" src="./assets/screenshots/01-results-4105-10700.png" alt="Search results state from Figma" />
+          </figure>
+          <figure>
+            <h3>Empty + Quick actions · <span>2233:35142</span></h3>
+            <img class="shot" src="./assets/screenshots/02-empty-quick-actions-2233-35142.png" alt="Empty Recent and Quick actions from Figma" />
+          </figure>
+          <figure>
+            <h3>Connection + Quick actions · <span>2238:37862</span></h3>
+            <img class="shot" src="./assets/screenshots/04-connection-quick-actions-2238-37862.png" alt="Connection empty search from Figma" />
+          </figure>
+          <figure>
+            <h3>PR drill-in · <span>4034:21258</span></h3>
+            <img class="shot" src="./assets/screenshots/05-pr-drill-in-4034-21258.png" alt="PR linked search drill-in from Figma" />
+          </figure>
+          <figure>
+            <h3>Compact bar · <span>2232:31010</span></h3>
+            <img class="shot" src="./assets/screenshots/03-compact-bar-2232-31010.png" alt="Compact search bar variant" />
+          </figure>
+        </div>
+      </section>
+
+      <section class="card" id="code">
+        <h2>Code in this repo</h2>
+        <ul class="spec">
+          <li><code>src/components/DashboardSearch.svelte</code> — full interactive palette</li>
+          <li><code>src/components/SearchStatusMessage.svelte</code> — no-results / error / loading</li>
+          <li><code>src/components/RepoPrTag.svelte</code> — status + meta variants</li>
+          <li><code>src/search-delivery-page.svelte</code> — in-app playground (SvelteKit route)</li>
+          <li><code>docs/DECISIONS.md</code> · <code>docs/INTEGRATION.md</code></li>
+        </ul>
+        <p class="note">
+          Figma file:
+          <a href="https://www.figma.com/design/4K8bilK5sR6uguD8hLbHf7/Universal-search?node-id=4105-10700&m=dev" target="_blank" rel="noreferrer"
+            >Universal-search · 4105:10700</a
+          >
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
