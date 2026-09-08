@@ -82,3 +82,9 @@ published. Delivery proceeds from design context + screenshots instead.
 Separate GitHub repo (`universal-search-delivery`) so designers / eng can share
 a **static HTML slide** + decisions + screenshots + component source without
 cloning the full unified-editor prototype.
+
+| Decision | Choice | Why |
+|---|---|---|
+| Docs chrome | **Notion-plain** (`docs/notion-plain-docs.mdc`) | One family across all published docs/reports |
+| Judgement | Taste layer (`docs/ruben-taste-layer.mdc`) | Roads not taken · one primary · system wins |
+| Product mocks | Figma elevation / radius / storm tokens | System wins — chrome stays flat; panels stay Figma |
