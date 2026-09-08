@@ -2,6 +2,10 @@
 
 Shareable handoff package for **Mermaid Universal Search** (⌘K palette).
 
+This package is the **canonical template** for the personal Cursor skill
+`delivery-documentation` (`~/.cursor/skills/delivery-documentation`). Say
+“delivery documentation” or recall that skill to regenerate packages in this shape.
+
 | | |
 |---|---|
 | **Taste layer** | [`docs/ruben-taste-layer.mdc`](./docs/ruben-taste-layer.mdc) — applied to delivery chrome |
